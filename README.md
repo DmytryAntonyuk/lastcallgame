@@ -17,20 +17,17 @@
 - удалить AAAA-записи и старые A-записи IONOS
 
 ### 2. Сервер (178.105.88.206)
+Скопируйте скрипт на сервер и запустите его:
 ```bash
-sudo mkdir -p /var/www/lastcallgame.fun
-sudo chown <deploy-user>:<deploy-user> /var/www/lastcallgame.fun
-sudo cp deploy/nginx-lastcallgame.conf /etc/nginx/sites-available/lastcallgame.fun
-sudo ln -s /etc/nginx/sites-available/lastcallgame.fun /etc/nginx/sites-enabled/
-sudo nginx -t && sudo systemctl reload nginx
-sudo certbot --nginx -d lastcallgame.fun -d www.lastcallgame.fun
+scp deploy/setup-server.sh <you>@178.105.88.206:~
+ssh <you>@178.105.88.206 'sudo bash ~/setup-server.sh'
 ```
-Сертификат выпускается, когда DNS уже указывает на сервер.
+Скрипт создаёт папку `/var/www/lastcallgame.fun` и пользователя `lastcall-deploy`, подключает конфиг nginx и проверяет его (при ошибке откатывает свои изменения), выпускает HTTPS-сертификат и один раз печатает SSH-ключ для секретов GitHub. Настройки других сайтов на сервере он не трогает.
 
 ### 3. Секреты GitHub (Settings → Secrets and variables → Actions)
 - `DEPLOY_HOST` — `178.105.88.206`
-- `DEPLOY_USER` — пользователь на сервере с правом записи в `/var/www/lastcallgame.fun`
-- `DEPLOY_SSH_KEY` — приватный SSH-ключ этого пользователя. Публичную часть ключа добавьте в `~/.ssh/authorized_keys` на сервере
+- `DEPLOY_USER` — `lastcall-deploy`
+- `DEPLOY_SSH_KEY` — ключ, который напечатал `setup-server.sh`
 - `DEPLOY_PATH` — необязательно, по умолчанию `/var/www/lastcallgame.fun`
 
 ### 4. Supabase
