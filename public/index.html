@@ -1221,7 +1221,7 @@ var UI = {
   ed_on:'Режим редактора: изменения видны только вам, пока вы их не опубликуете.', ed_dirty:'Есть неопубликованные изменения', publish:'Опубликовать', discard:'Отменить изменения', exit:'Выйти',
   add:'Добавить', edit:'Изменить', del:'Удалить', del_confirm:'Точно удалить?', save:'Сохранить', cancel:'Отмена', settings:'Настройки сайта',
   published:'Опубликовано', pub_conflict:'Другой администратор опубликовал изменения раньше вас. Загружена свежая версия, ваши правки не сохранены.', pub_ro:'У вас нет прав на изменение этой страницы.', pub_err:'Не удалось опубликовать. Попробуйте ещё раз через минуту.',
-  calc_h:'Посчитайте очки', calc_case:'Кейс эвакуирован', calc_n:'Эвакуировано бойцов', pts:'очков'
+  calc_h:'Посчитайте очки', calc_note:'Эвакуироваться можно только с кейсом: 4 очка за кейс плюс по 1 за каждого бойца, включая того, кто его несёт.', calc_n:'Эвакуировано бойцов', pts:'очков'
  },
  uk:{ login:'Вхід для адміністраторів', logout:'Вийти', no_admin:'Цей акаунт не має прав адміністратора', uploading:'Завантаження…', upload_video:'Завантажити відео', vid_big:'Файл більший за 50 МБ. Завантажте його на YouTube і вставте посилання.', upl_fail:'Не вдалося завантажити файл', offline:'Немає зв’язку із сервером: показано збережену версію сайту.', map_tba:'Карту буде оголошено', dates_tba:'Дати буде оголошено', theme_light:'Світла тема', theme_dark:'Темна тема', play:'Дивитися відео', video:'Відео', read_log:'Читати чейнджлог', all_updates:'Усі оновлення', not_found:'Такого оновлення немає. Можливо, його видалили.', older:'Попереднє', newer:'Наступне', changelog:'Чейнджлог', teaser:'Тизер Last Call', teaser_hint:'Додайте відео тизера в «Налаштуваннях сайту»', upload:'Завантажити фото', img_hint:'Перше фото — обкладинка. Фото стискаються до 1600 px.', cover:'обкладинка', size:'Розмір сторінки', img_fail:'Не вдалося прочитати зображення', brief:'Брифінг операції', tagline:'мод для Squad', nav_mode:'Режим', nav_news:'Оновлення', nav_roadmap:'Дорожня карта', nav_season:'Сезон', nav_bugs:'Баг-репорт',
   hero_lead:'Змагальний режим для Squad: замість двох великих команд — до дев’яти незалежних загонів і повстанці-одинаки.',
@@ -1252,7 +1252,7 @@ var UI = {
   ed_on:'Режим редактора: зміни бачите лише ви, доки не опублікуєте їх.', ed_dirty:'Є неопубліковані зміни', publish:'Опублікувати', discard:'Скасувати зміни', exit:'Вийти',
   add:'Додати', edit:'Змінити', del:'Видалити', del_confirm:'Точно видалити?', save:'Зберегти', cancel:'Скасувати', settings:'Налаштування сайту',
   published:'Опубліковано', pub_conflict:'Інший адміністратор опублікував зміни раніше за вас. Завантажено свіжу версію, ваші правки не збережено.', pub_ro:'У вас немає прав на зміну цієї сторінки.', pub_err:'Не вдалося опублікувати. Спробуйте ще раз за хвилину.',
-  calc_h:'Порахуйте очки', calc_case:'Кейс евакуйовано', calc_n:'Евакуйовано бійців', pts:'очок'
+  calc_h:'Порахуйте очки', calc_note:'Евакуюватися можна лише з кейсом: 4 очки за кейс плюс по 1 за кожного бійця, зокрема того, хто його несе.', calc_n:'Евакуйовано бійців', pts:'очок'
  },
  en:{ login:'Admin sign-in', logout:'Sign out', no_admin:'This account is not a site admin', uploading:'Uploading…', upload_video:'Upload video', vid_big:'The file is over 50 MB. Upload it to YouTube and paste the link.', upl_fail:'Upload failed', offline:'Cannot reach the server: showing the saved version of the site.', map_tba:'Map to be announced', dates_tba:'Dates to be announced', theme_light:'Light theme', theme_dark:'Dark theme', play:'Watch video', video:'Video', read_log:'Read the changelog', all_updates:'All updates', not_found:'This update does not exist. It may have been deleted.', older:'Previous', newer:'Next', changelog:'Changelog', teaser:'Last Call teaser', teaser_hint:'Add a teaser video in Site settings', upload:'Upload photos', img_hint:'The first photo is the cover. Photos are resized to 1600 px.', cover:'cover', size:'Page size', img_fail:'Could not read that image', brief:'Operation briefing', tagline:'a Squad mod', nav_mode:'The mode', nav_news:'Updates', nav_roadmap:'Roadmap', nav_season:'Season', nav_bugs:'Report a bug',
   hero_lead:'A competitive mode for Squad: instead of two big teams, up to nine independent squads and lone insurgents.',
@@ -1283,7 +1283,7 @@ var UI = {
   ed_on:'Editor mode: only you see changes until you publish them.', ed_dirty:'You have unpublished changes', publish:'Publish', discard:'Discard changes', exit:'Exit',
   add:'Add', edit:'Edit', del:'Delete', del_confirm:'Delete for good?', save:'Save', cancel:'Cancel', settings:'Site settings',
   published:'Published', pub_conflict:'Another admin published first. The latest version is loaded; your edits were not saved.', pub_ro:'You do not have permission to change this page.', pub_err:'Publishing failed. Try again in a minute.',
-  calc_h:'Work out the score', calc_case:'Case extracted', calc_n:'Players extracted', pts:'points'
+  calc_h:'Work out the score', calc_note:'You can only extract with the case: 4 points for the case plus 1 for each player, including the carrier.', calc_n:'Players extracted', pts:'points'
  }
 };
 function t(k){ return (UI[lang] && UI[lang][k]) || UI.ru[k] || k; }
@@ -1429,7 +1429,7 @@ var tzIdx = 0, tzStart = Date.now();
 var ed = { can:false, on:false, dirty:false, busy:false, user:null };
 var selSeason = null;
 var bug = { title:'', ver:'', map:'', stage:'any', sev:'major', steps:'', expected:'', actual:'', nick:'', media:'' };
-var calc = { case:true, n:5 };
+var calc = { n:5 };
 
 function sortedNews(){ return (S.news||[]).slice().sort(function(a,b){ return (b.date||'').localeCompare(a.date||''); }); }
 function seasonsSorted(){ var o={active:0,upcoming:1,finished:2}; return (S.seasons||[]).slice().sort(function(a,b){ return (o[a.status]-o[b.status]) || (b.start||'').localeCompare(a.start||''); }); }
@@ -1499,8 +1499,8 @@ function chapter(g){
   return h + '</section>';
 }
 function calcBox(){
-  var pts = (calc.case?4:0) + calc.n;
-  return '<div class="calc"><div class="ctl"><strong>'+esc(t('calc_h'))+'</strong><label><input type="checkbox" id="calc-case"'+(calc.case?' checked':'')+' style="accent-color:var(--accent);width:18px;height:18px"> '+esc(t('calc_case'))+'</label><div class="fld"><label for="calc-n">'+esc(t('calc_n'))+': <span class="mono" id="calc-nv">'+calc.n+'</span> / 9</label><input type="range" id="calc-n" min="0" max="9" value="'+calc.n+'"></div></div><div class="out"><b id="calc-out">'+pts+'</b><span class="formula" id="calc-f">'+(calc.case?'4 + ':'')+calc.n+' × 1</span></div></div>';
+  var pts = 4 + calc.n;
+  return '<div class="calc"><div class="ctl"><strong>'+esc(t('calc_h'))+'</strong><p class="muted" style="font-size:14px">'+esc(t('calc_note'))+'</p><div class="fld"><label for="calc-n">'+esc(t('calc_n'))+': <span class="mono" id="calc-nv">'+calc.n+'</span> / 9</label><input type="range" id="calc-n" min="1" max="9" value="'+calc.n+'"></div></div><div class="out"><b id="calc-out">'+pts+'</b><span class="formula" id="calc-f">4 + '+calc.n+' × 1</span></div></div>';
 }
 
 var SUN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>';
@@ -1847,11 +1847,11 @@ document.addEventListener('click', function(ev){
 document.addEventListener('input', function(ev){
   var el = ev.target;
   if (el.hasAttribute && el.hasAttribute('data-bug')) { bug[el.getAttribute('data-bug')] = el.value; updateBugPreview(); return; }
-  if (el.id==='calc-n' || el.id==='calc-case') {
-    calc.n = Number(document.getElementById('calc-n').value); calc.case = document.getElementById('calc-case').checked;
+  if (el.id==='calc-n') {
+    calc.n = Number(document.getElementById('calc-n').value);
     document.getElementById('calc-nv').textContent = calc.n;
-    document.getElementById('calc-out').textContent = (calc.case?4:0)+calc.n;
-    document.getElementById('calc-f').textContent = (calc.case?'4 + ':'')+calc.n+' × 1';
+    document.getElementById('calc-out').textContent = 4+calc.n;
+    document.getElementById('calc-f').textContent = '4 + '+calc.n+' × 1';
   }
 });
 document.addEventListener('change', function(ev){ var el=ev.target;
@@ -1873,7 +1873,7 @@ document.addEventListener('change', function(ev){ var el=ev.target;
     uploadMedia(f, (f.name.split('.').pop() || 'mp4').toLowerCase()).then(function(url){ if (target) target.value = url; toast(t('published').replace(/.*/, '✓')); }).catch(function(){ toast(t('upl_fail')); });
     el.value = '';
     return;
-  } if (el.id==='calc-case') el.dispatchEvent(new Event('input',{bubbles:true})); if (el.getAttribute && el.getAttribute('data-bug')==='sev') { bug.sev = el.value; updateBugPreview(); } });
+  } if (el.getAttribute && el.getAttribute('data-bug')==='sev') { bug.sev = el.value; updateBugPreview(); } });
 document.addEventListener('keydown', function(ev){ if (ev.key==='Escape' && editing) closeEditor(); });
 window.addEventListener('hashchange', function(){ var pv = view, pp = postId; parseHash(); if (view !== pv || postId !== pp) { galleryIdx = 0; render(); window.scrollTo(0,0); } });
 
