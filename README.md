@@ -17,12 +17,20 @@
 - удалить AAAA-записи и старые A-записи IONOS
 
 ### 2. Сервер (178.105.88.206)
-Репозиторий должен быть публичным: сервер скачивает сайт без ключей. В веб-консоли Hetzner (или по SSH) под root:
+На сервере порты 80/443 держит Caddy в Docker (`squadhub-caddy-1`). Репозиторий должен быть публичным. В веб-консоли Hetzner (или по SSH) под root:
 ```bash
-curl -fsSL raw.githubusercontent.com/DmytryAntonyuk/lastcallgame/main/deploy/setup-server.sh -o s.sh
-bash s.sh
+curl -fsSL raw.githubusercontent.com/DmytryAntonyuk/lastcallgame/main/deploy/setup-caddy.sh -o c.sh
+bash c.sh
 ```
-Скрипт ставит git и certbot, клонирует репозиторий в `/opt/lastcallgame`, включает таймер `lastcall-pull.timer`, который раз в 2 минуты делает `git pull`, подключает конфиг nginx только для lastcallgame.fun (с проверкой и откатом) и выпускает HTTPS-сертификат. Настройки других сайтов на сервере он не трогает.
+Скрипт клонирует репозиторий в `/opt/lastcallgame` и включает таймер `lastcall-pull.timer` (`git pull` раз в 2 минуты), запускает контейнер `lastcall-web` (nginx) в сети Caddy, дописывает в Caddyfile один блок для lastcallgame.fun, проверяет конфиг (при ошибке откатывает) и перезагружает Caddy без перезапуска. HTTPS-сертификат Caddy выпускает сам. Другие сайты в Caddyfile не затрагиваются.
+
+Если деплой squadhub перезаписывает Caddyfile, этот же блок нужно добавить в Caddyfile репозитория squadhub:
+```
+lastcallgame.fun, www.lastcallgame.fun {
+	encode zstd gzip
+	reverse_proxy lastcall-web:80
+}
+```
 
 Обновить сайт вручную, не дожидаясь таймера: `systemctl start lastcall-pull.service`.
 
