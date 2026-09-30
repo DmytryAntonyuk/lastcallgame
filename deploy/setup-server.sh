@@ -1,25 +1,27 @@
 #!/usr/bin/env bash
-# One-time setup of lastcallgame.fun on the squaduck server.
-# Run on the server:  sudo bash setup-server.sh
-# Safe to re-run. Touches only lastcallgame.fun files, the deploy user and its SSH key.
+# One-time setup of lastcallgame.fun on the squaduck server (no SSH keys needed).
+# Run on the server as root:
+#   curl -fsSL raw.githubusercontent.com/DmytryAntonyuk/lastcallgame/main/deploy/setup-server.sh -o s.sh
+#   bash s.sh
+# The server then pulls the public repository every 2 minutes, so a push to main
+# goes live on its own. Safe to re-run. Touches only lastcallgame.fun files.
 set -euo pipefail
 
 DOMAIN="lastcallgame.fun"
-ROOT="/var/www/$DOMAIN"
-DEPLOY_USER="${DEPLOY_USER:-lastcall-deploy}"
+REPO="https://github.com/DmytryAntonyuk/lastcallgame.git"
+SRC="/opt/lastcallgame"
+ROOT="$SRC/public"
 EMAIL="${EMAIL:-}"
 
-say(){ printf '\n\033[1;31m==\033[0m %s\n' "$*"; }
-[ "$(id -u)" -eq 0 ] || { echo "Запустите через sudo: sudo bash $0"; exit 1; }
+say(){ printf '\n== %s\n' "$*"; }
+[ "$(id -u)" -eq 0 ] || { echo "Run as root: sudo bash $0"; exit 1; }
 
-say "1/6 Проверяю веб-сервер"
+say "1/5 Web server"
 if ! command -v nginx >/dev/null 2>&1; then
-  echo "nginx на этом сервере не найден. Скорее всего, трафик принимает Docker (Traefik, Caddy и т. п.)."
-  echo "Кто слушает порты 80 и 443:"
+  echo "nginx not found. Ports 80/443 are used by:"
   (ss -ltnp 2>/dev/null | grep -E ':(80|443)\b') || true
   (docker ps --format '{{.Names}}  {{.Image}}  {{.Ports}}' 2>/dev/null) || true
-  echo
-  echo "Ничего не изменено. Пришлите этот вывод Claude, и он подготовит настройку под вашу схему."
+  echo "Nothing was changed. Send this output to Claude."
   exit 2
 fi
 nginx -v
@@ -29,29 +31,46 @@ else
   CONF="/etc/nginx/conf.d/$DOMAIN.conf"; LINK=""
 fi
 
-say "2/6 Ставлю rsync и certbot (если их нет)"
-if command -v apt-get >/dev/null 2>&1; then
-  export DEBIAN_FRONTEND=noninteractive
-  NEED=""
-  command -v rsync >/dev/null || NEED="$NEED rsync"
-  command -v certbot >/dev/null || NEED="$NEED certbot python3-certbot-nginx"
-  dpkg -s python3-certbot-nginx >/dev/null 2>&1 || NEED="$NEED python3-certbot-nginx"
-  if [ -n "$NEED" ]; then apt-get update -qq && apt-get install -y -qq $NEED; fi
+say "2/5 Packages (git, certbot)"
+export DEBIAN_FRONTEND=noninteractive
+NEED=""
+command -v git >/dev/null || NEED="$NEED git"
+command -v certbot >/dev/null || NEED="$NEED certbot"
+dpkg -s python3-certbot-nginx >/dev/null 2>&1 || NEED="$NEED python3-certbot-nginx"
+if [ -n "$NEED" ]; then apt-get update -qq && apt-get install -y -qq $NEED; fi
+
+say "3/5 Site files from GitHub"
+if [ -d "$SRC/.git" ]; then
+  git -C "$SRC" pull --ff-only -q
 else
-  command -v rsync >/dev/null && command -v certbot >/dev/null || { echo "Установите rsync и certbot (с плагином nginx) вручную и запустите скрипт снова."; exit 1; }
+  rm -rf "$SRC"
+  git clone -q --depth 1 "$REPO" "$SRC"
 fi
+ls -l "$ROOT/index.html"
 
-say "3/6 Пользователь для деплоя и папка сайта"
-id "$DEPLOY_USER" >/dev/null 2>&1 || useradd --create-home --shell /bin/bash "$DEPLOY_USER"
-mkdir -p "$ROOT"
-if [ ! -f "$ROOT/index.html" ]; then
-  echo '<!doctype html><meta charset="utf-8"><title>Last Call</title><p style="font-family:sans-serif;padding:40px">Last Call — сайт скоро появится.</p>' > "$ROOT/index.html"
-fi
-chown -R "$DEPLOY_USER":"$DEPLOY_USER" "$ROOT"
+cat > /etc/systemd/system/lastcall-pull.service <<UNIT
+[Unit]
+Description=Update lastcallgame.fun from GitHub
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/git -C $SRC pull --ff-only -q
+UNIT
+cat > /etc/systemd/system/lastcall-pull.timer <<UNIT
+[Unit]
+Description=Update lastcallgame.fun from GitHub every 2 minutes
+[Timer]
+OnBootSec=1min
+OnUnitActiveSec=2min
+[Install]
+WantedBy=timers.target
+UNIT
+systemctl daemon-reload
+systemctl enable --now lastcall-pull.timer >/dev/null
+echo "Auto-update: every 2 minutes"
 
-say "4/6 Конфиг nginx для $DOMAIN"
-if [ -f "$CONF" ] && grep -q "managed-by: lastcall" "$CONF" && grep -q "ssl_certificate" "$CONF"; then
-  echo "Конфиг уже настроен с HTTPS — оставляю как есть."
+say "4/5 nginx config"
+if [ -f "$CONF" ] && grep -q "managed-by: lastcall" "$CONF" && grep -q "ssl_certificate" "$CONF" && grep -q "root $ROOT;" "$CONF"; then
+  echo "Already configured with HTTPS."
 else
   BACKUP=""
   [ -f "$CONF" ] && { BACKUP="$CONF.bak.$(date +%s)"; cp "$CONF" "$BACKUP"; }
@@ -65,6 +84,7 @@ server {
     root $ROOT;
     index index.html;
 
+    location ~ /\.git { deny all; }
     location / {
         try_files \$uri \$uri/ /index.html;
     }
@@ -75,7 +95,7 @@ server {
 NGINX
   [ -n "$LINK" ] && ln -sf "$CONF" "$LINK"
   if ! nginx -t; then
-    echo "Проверка nginx не прошла — откатываю свои изменения."
+    echo "nginx config test failed. Rolling back my changes."
     [ -n "$LINK" ] && rm -f "$LINK"
     if [ -n "$BACKUP" ]; then mv "$BACKUP" "$CONF"; else rm -f "$CONF"; fi
     exit 1
@@ -83,29 +103,13 @@ NGINX
   systemctl reload nginx
 fi
 
-say "5/6 HTTPS-сертификат"
+say "5/5 HTTPS certificate"
 if [ -n "$EMAIL" ]; then MAIL=(-m "$EMAIL"); else MAIL=(--register-unsafely-without-email); fi
-certbot --nginx -d "$DOMAIN" -d "www.$DOMAIN" --non-interactive --agree-tos --redirect "${MAIL[@]}" || {
-  echo "certbot не смог выпустить сертификат. Сайт уже доступен по http://$DOMAIN — пришлите этот вывод Claude."
-}
-nginx -t && systemctl reload nginx
-
-say "6/6 SSH-ключ для GitHub Actions"
-HOME_DIR="$(getent passwd "$DEPLOY_USER" | cut -d: -f6)"
-install -d -m 700 -o "$DEPLOY_USER" -g "$DEPLOY_USER" "$HOME_DIR/.ssh"
-KEYTMP="$(mktemp -d)"
-ssh-keygen -q -t ed25519 -N "" -C "github-actions@lastcallgame" -f "$KEYTMP/key"
-cat "$KEYTMP/key.pub" >> "$HOME_DIR/.ssh/authorized_keys"
-chown "$DEPLOY_USER":"$DEPLOY_USER" "$HOME_DIR/.ssh/authorized_keys"; chmod 600 "$HOME_DIR/.ssh/authorized_keys"
-
-echo
-echo "Готово. Добавьте в GitHub → lastcallgame → Settings → Secrets and variables → Actions:"
-echo
-echo "  DEPLOY_HOST     = $(curl -fsS -4 https://ifconfig.me 2>/dev/null || hostname -I | awk '{print $1}')"
-echo "  DEPLOY_USER     = $DEPLOY_USER"
-echo "  DEPLOY_SSH_KEY  = весь текст ниже, включая строки BEGIN и END:"
-echo
-cat "$KEYTMP/key"
-rm -rf "$KEYTMP"
-echo
-echo "Ключ показан один раз и на сервере не сохранён. Потом запустите в GitHub Actions «Deploy to lastcallgame.fun»."
+if certbot --nginx -d "$DOMAIN" -d "www.$DOMAIN" --non-interactive --agree-tos --redirect "${MAIL[@]}"; then
+  nginx -t && systemctl reload nginx
+  echo
+  echo "DONE: https://$DOMAIN"
+else
+  echo
+  echo "Site is up on http://$DOMAIN, but the certificate failed. Send this output to Claude."
+fi
