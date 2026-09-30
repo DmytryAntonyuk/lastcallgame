@@ -12,6 +12,7 @@
 <meta property="og:url" content="https://lastcallgame.fun/">
 <meta name="theme-color" content="#04080F">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230B1730'/%3E%3Cpath d='M18 14h8v28h14v8H18z' fill='%23E6EAF2'/%3E%3Ccircle cx='46' cy='20' r='6' fill='%23A60002'/%3E%3C/svg%3E">
+<script>window.LC_EMBED_YT=true;</script>
 <script>try{var th=localStorage.getItem('lc-theme');document.documentElement.className=th==='light'?'t-light':'t-dark';}catch(e){}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -420,6 +421,16 @@ footer .wrap{display:flex;gap:16px;flex-wrap:wrap;justify-content:space-between;
 .pcol{background:var(--surface);padding:18px;display:grid;gap:8px;align-content:start;font-size:14px}
 .pcol h3{font-size:17px;text-transform:uppercase}
 .pcol ul{margin:0;padding-left:18px;display:grid;gap:4px;color:var(--muted)}
+.tz-play{position:absolute;left:50%;bottom:34px;transform:translateX(-50%);z-index:3;display:inline-flex;align-items:center;gap:10px;padding:11px 20px 11px 16px;border-radius:999px;border:0;background:#A60002;color:#fff;font:600 15px/1 var(--f-body);text-decoration:none;cursor:pointer;box-shadow:0 10px 30px rgba(0,0,0,.45);white-space:nowrap}
+.tz-play svg{width:16px;height:16px}
+.tz-play:hover{filter:brightness(1.1)}
+@media (max-width:620px){.tz-play{bottom:26px}}
+.trailer-btn svg{width:14px;height:14px}
+.tscrim{background:rgba(2,4,8,.88);z-index:60}
+.tmodal{position:relative;width:min(1100px,100%);display:grid}
+.tbox{position:relative;aspect-ratio:16/9;max-width:100%;background:#000;border-radius:10px;overflow:hidden;max-height:calc(100vh - 100px)}
+.tbox video,.tbox iframe{position:absolute;inset:0;width:100%;height:100%;border:0;background:#000}
+.tclose{justify-self:end;margin-bottom:10px;width:40px;height:40px;border-radius:50%;border:1px solid rgba(255,255,255,.3);background:transparent;color:#fff;font-size:18px;cursor:pointer}
 @media (prefers-reduced-motion:no-preference){.view-in{animation:vin .25s ease-out}@keyframes vin{from{transform:translateY(6px)}to{transform:none}}}
 </style>
 <style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
@@ -1192,7 +1203,7 @@ if (LANGS.indexOf(lang) < 0) lang = 'ru';
 
 /* ---------- UI strings ---------- */
 var UI = {
- ru:{ login:'Вход для администраторов', logout:'Выйти', no_admin:'У этого аккаунта нет прав администратора', uploading:'Загрузка…', upload_video:'Загрузить видео', vid_big:'Файл больше 50 МБ. Загрузите его на YouTube и вставьте ссылку.', upl_fail:'Не удалось загрузить файл', offline:'Нет связи с сервером: показана сохранённая версия сайта.', map_tba:'Карта будет объявлена', dates_tba:'Даты будут объявлены', theme_light:'Светлая тема', theme_dark:'Тёмная тема', play:'Смотреть видео', video:'Видео', read_log:'Читать чейнджлог', all_updates:'Все обновления', not_found:'Такого обновления нет. Возможно, его удалили.', older:'Предыдущее', newer:'Следующее', changelog:'Чейнджлог', teaser:'Тизер Last Call', teaser_hint:'Добавьте видео тизера в «Настройках сайта»', upload:'Загрузить фото', img_hint:'Первое фото — обложка. Фото сжимаются до 1600 px.', cover:'обложка', size:'Размер страницы', img_fail:'Не удалось прочитать изображение', brief:'Брифинг операции', tagline:'мод для Squad', nav_mode:'Режим', nav_news:'Обновления', nav_roadmap:'Дорожная карта', nav_season:'Сезон', nav_bugs:'Баг-репорт',
+ ru:{ login:'Вход для администраторов', logout:'Выйти', no_admin:'У этого аккаунта нет прав администратора', uploading:'Загрузка…', upload_video:'Загрузить видео', vid_big:'Файл больше 50 МБ. Загрузите его на YouTube и вставьте ссылку.', upl_fail:'Не удалось загрузить файл', offline:'Нет связи с сервером: показана сохранённая версия сайта.', map_tba:'Карта будет объявлена', dates_tba:'Даты будут объявлены', theme_light:'Светлая тема', theme_dark:'Тёмная тема', play:'Смотреть видео', video:'Видео', read_log:'Читать чейнджлог', all_updates:'Все обновления', not_found:'Такого обновления нет. Возможно, его удалили.', older:'Предыдущее', newer:'Следующее', changelog:'Чейнджлог', teaser:'Тизер Last Call', teaser_hint:'Добавьте трейлер в «Настройках сайта», и появится кнопка «Смотреть трейлер»', watch_trailer:'Смотреть трейлер', close:'Закрыть', upload:'Загрузить фото', img_hint:'Первое фото — обложка. Фото сжимаются до 1600 px.', cover:'обложка', size:'Размер страницы', img_fail:'Не удалось прочитать изображение', brief:'Брифинг операции', tagline:'мод для Squad', nav_mode:'Режим', nav_news:'Обновления', nav_roadmap:'Дорожная карта', nav_season:'Сезон', nav_bugs:'Баг-репорт',
   hero_lead:'Соревновательный режим для Squad: вместо двух больших команд — до девяти независимых отрядов и одиночные повстанцы.',
   hero_goal:'Цель у всех одна: найти кейс с кодами доступа к стратегическому арсеналу, захватить его и покинуть район операции.',
   how:'Как играть', schedule:'Расписание сезона', register:'Регистрация', reg_closed:'Регистрация закрыта', played:'Сыгран',
@@ -1223,7 +1234,7 @@ var UI = {
   published:'Опубликовано', pub_conflict:'Другой администратор опубликовал изменения раньше вас. Загружена свежая версия, ваши правки не сохранены.', pub_ro:'У вас нет прав на изменение этой страницы.', pub_err:'Не удалось опубликовать. Попробуйте ещё раз через минуту.',
   calc_h:'Посчитайте очки', calc_note:'Эвакуироваться можно только с кейсом: 4 очка за кейс плюс по 1 за каждого бойца, включая того, кто его несёт.', calc_n:'Эвакуировано бойцов', pts:'очков'
  },
- uk:{ login:'Вхід для адміністраторів', logout:'Вийти', no_admin:'Цей акаунт не має прав адміністратора', uploading:'Завантаження…', upload_video:'Завантажити відео', vid_big:'Файл більший за 50 МБ. Завантажте його на YouTube і вставте посилання.', upl_fail:'Не вдалося завантажити файл', offline:'Немає зв’язку із сервером: показано збережену версію сайту.', map_tba:'Карту буде оголошено', dates_tba:'Дати буде оголошено', theme_light:'Світла тема', theme_dark:'Темна тема', play:'Дивитися відео', video:'Відео', read_log:'Читати чейнджлог', all_updates:'Усі оновлення', not_found:'Такого оновлення немає. Можливо, його видалили.', older:'Попереднє', newer:'Наступне', changelog:'Чейнджлог', teaser:'Тизер Last Call', teaser_hint:'Додайте відео тизера в «Налаштуваннях сайту»', upload:'Завантажити фото', img_hint:'Перше фото — обкладинка. Фото стискаються до 1600 px.', cover:'обкладинка', size:'Розмір сторінки', img_fail:'Не вдалося прочитати зображення', brief:'Брифінг операції', tagline:'мод для Squad', nav_mode:'Режим', nav_news:'Оновлення', nav_roadmap:'Дорожня карта', nav_season:'Сезон', nav_bugs:'Баг-репорт',
+ uk:{ login:'Вхід для адміністраторів', logout:'Вийти', no_admin:'Цей акаунт не має прав адміністратора', uploading:'Завантаження…', upload_video:'Завантажити відео', vid_big:'Файл більший за 50 МБ. Завантажте його на YouTube і вставте посилання.', upl_fail:'Не вдалося завантажити файл', offline:'Немає зв’язку із сервером: показано збережену версію сайту.', map_tba:'Карту буде оголошено', dates_tba:'Дати буде оголошено', theme_light:'Світла тема', theme_dark:'Темна тема', play:'Дивитися відео', video:'Відео', read_log:'Читати чейнджлог', all_updates:'Усі оновлення', not_found:'Такого оновлення немає. Можливо, його видалили.', older:'Попереднє', newer:'Наступне', changelog:'Чейнджлог', teaser:'Тизер Last Call', teaser_hint:'Додайте трейлер у «Налаштуваннях сайту», і з’явиться кнопка «Дивитися трейлер»', watch_trailer:'Дивитися трейлер', close:'Закрити', upload:'Завантажити фото', img_hint:'Перше фото — обкладинка. Фото стискаються до 1600 px.', cover:'обкладинка', size:'Розмір сторінки', img_fail:'Не вдалося прочитати зображення', brief:'Брифінг операції', tagline:'мод для Squad', nav_mode:'Режим', nav_news:'Оновлення', nav_roadmap:'Дорожня карта', nav_season:'Сезон', nav_bugs:'Баг-репорт',
   hero_lead:'Змагальний режим для Squad: замість двох великих команд — до дев’яти незалежних загонів і повстанці-одинаки.',
   hero_goal:'Мета в усіх одна: знайти кейс із кодами доступу до стратегічного арсеналу, захопити його й залишити район операції.',
   how:'Як грати', schedule:'Розклад сезону', register:'Реєстрація', reg_closed:'Реєстрацію закрито', played:'Зіграно',
@@ -1254,7 +1265,7 @@ var UI = {
   published:'Опубліковано', pub_conflict:'Інший адміністратор опублікував зміни раніше за вас. Завантажено свіжу версію, ваші правки не збережено.', pub_ro:'У вас немає прав на зміну цієї сторінки.', pub_err:'Не вдалося опублікувати. Спробуйте ще раз за хвилину.',
   calc_h:'Порахуйте очки', calc_note:'Евакуюватися можна лише з кейсом: 4 очки за кейс плюс по 1 за кожного бійця, зокрема того, хто його несе.', calc_n:'Евакуйовано бійців', pts:'очок'
  },
- en:{ login:'Admin sign-in', logout:'Sign out', no_admin:'This account is not a site admin', uploading:'Uploading…', upload_video:'Upload video', vid_big:'The file is over 50 MB. Upload it to YouTube and paste the link.', upl_fail:'Upload failed', offline:'Cannot reach the server: showing the saved version of the site.', map_tba:'Map to be announced', dates_tba:'Dates to be announced', theme_light:'Light theme', theme_dark:'Dark theme', play:'Watch video', video:'Video', read_log:'Read the changelog', all_updates:'All updates', not_found:'This update does not exist. It may have been deleted.', older:'Previous', newer:'Next', changelog:'Changelog', teaser:'Last Call teaser', teaser_hint:'Add a teaser video in Site settings', upload:'Upload photos', img_hint:'The first photo is the cover. Photos are resized to 1600 px.', cover:'cover', size:'Page size', img_fail:'Could not read that image', brief:'Operation briefing', tagline:'a Squad mod', nav_mode:'The mode', nav_news:'Updates', nav_roadmap:'Roadmap', nav_season:'Season', nav_bugs:'Report a bug',
+ en:{ login:'Admin sign-in', logout:'Sign out', no_admin:'This account is not a site admin', uploading:'Uploading…', upload_video:'Upload video', vid_big:'The file is over 50 MB. Upload it to YouTube and paste the link.', upl_fail:'Upload failed', offline:'Cannot reach the server: showing the saved version of the site.', map_tba:'Map to be announced', dates_tba:'Dates to be announced', theme_light:'Light theme', theme_dark:'Dark theme', play:'Watch video', video:'Video', read_log:'Read the changelog', all_updates:'All updates', not_found:'This update does not exist. It may have been deleted.', older:'Previous', newer:'Next', changelog:'Changelog', teaser:'Last Call teaser', teaser_hint:'Add a trailer in Site settings to show the Watch trailer button', watch_trailer:'Watch trailer', close:'Close', upload:'Upload photos', img_hint:'The first photo is the cover. Photos are resized to 1600 px.', cover:'cover', size:'Page size', img_fail:'Could not read that image', brief:'Operation briefing', tagline:'a Squad mod', nav_mode:'The mode', nav_news:'Updates', nav_roadmap:'Roadmap', nav_season:'Season', nav_bugs:'Report a bug',
   hero_lead:'A competitive mode for Squad: instead of two big teams, up to nine independent squads and lone insurgents.',
   hero_goal:'Everyone has the same goal: find the case with the access codes to the strategic arsenal, seize it and leave the area of operations.',
   how:'How to play', schedule:'Season schedule', register:'Register', reg_closed:'Registration closed', played:'Played',
@@ -1480,7 +1491,7 @@ function vMode(){
   var chapters = GUIDE.map(chapter).join('');
   var ln = sortedNews()[0];
   var latest = ln ? '<a class="card" href="#news-'+esc(ln.id)+'" style="text-decoration:none"><span class="eyebrow">'+esc(t('latest'))+(ln.version?' · v'+esc(ln.version):'')+'</span><h3>'+esc(tr(ln.title))+'</h3><span class="muted" style="font-size:14px">'+esc(fmtDate(ln.date))+'</span></a>' : '';
-  return '<section class="hero"><div><span class="eyebrow">'+esc(t('brief'))+'</span><h1 style="margin-top:14px">Last<br><em>Call</em></h1><p class="lead">'+esc(t('hero_lead'))+'</p><p class="goal">'+esc(t('hero_goal'))+'</p><div class="row"><a class="btn primary" href="#mode" data-jump="squads">'+esc(t('how'))+'</a><a class="btn" href="#season">'+esc(t('schedule'))+'</a></div></div>'+
+  return '<section class="hero"><div><span class="eyebrow">'+esc(t('brief'))+'</span><h1 style="margin-top:14px">Last<br><em>Call</em></h1><p class="lead">'+esc(t('hero_lead'))+'</p><p class="goal">'+esc(t('hero_goal'))+'</p><div class="row"><a class="btn primary" href="#mode" data-jump="squads">'+esc(t('how'))+'</a><a class="btn" href="#season">'+esc(t('schedule'))+'</a>'+trailerBtn('btn trailer-btn')+'</div></div>'+
     '<div style="display:grid;gap:12px">'+matchCard(nextMatch())+latest+'</div></section>'+teaser()+
     '<div class="facts">'+facts+'</div>'+
     '<section class="chap" style="border-top:0;padding-top:40px"><span class="eyebrow">'+esc(t('phases'))+'</span>'+phaseTrack()+'</section>'+
@@ -1509,7 +1520,7 @@ var PLAY = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><pat
 function ytId(u){ var m = String(u||'').match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?(?:.*&)?v=|shorts\/|embed\/|live\/))([\w-]{11})/); return m ? m[1] : null; }
 function videoInfo(u){
   u = String(u||'').trim(); if (!u) return null;
-  var y = ytId(u); if (y) return {kind:'yt', href:'https://www.youtube.com/watch?v='+y, label:'YouTube'};
+  var y = ytId(u); if (y) return {kind:'yt', id:y, href:'https://www.youtube.com/watch?v='+y, label:'YouTube'};
   if (/^(https?:\/\/[^\s]+|[\w.\/-]+)\.(mp4|webm|mov)(\?[^\s]*)?$/i.test(u)) return {kind:'file', src:u};
   var su = safeUrl(u); return su ? {kind:'link', href:su, label:host(su)} : null;
 }
@@ -1556,12 +1567,29 @@ function vPost(){
 }
 var TZ = [{"a": {"ru": "Найди код.", "uk": "Знайди код.", "en": "Find the code."}, "b": {"ru": "Забери преимущество.", "uk": "Забери перевагу.", "en": "Take the edge."}, "s": {"ru": "Взламывай точки связи и меняй ход операции до финального раунда.", "uk": "Зламуй точки зв’язку й змінюй хід операції до фінального раунду.", "en": "Hack comms points and change the course of the operation before the final round."}}, {"a": {"ru": "Девять отрядов.", "uk": "Дев’ять загонів.", "en": "Nine squads."}, "b": {"ru": "Один кейс.", "uk": "Один кейс.", "en": "One case."}, "s": {"ru": "Нации сражаются за коды доступа к стратегическому арсеналу.", "uk": "Нації борються за коди доступу до стратегічного арсеналу.", "en": "Nations fight for the access codes to the strategic arsenal."}}, {"a": {"ru": "Кейс найден.", "uk": "Кейс знайдено.", "en": "The case is found."}, "b": {"ru": "Охота началась.", "uk": "Полювання почалося.", "en": "The hunt is on."}, "s": {"ru": "Его нужно удержать и доставить в зону эвакуации.", "uk": "Його треба втримати й доставити в зону евакуації.", "en": "Now hold it and get it to the extraction zone."}}, {"a": {"ru": "Подкрепления заканчиваются.", "uk": "Підкріплення закінчуються.", "en": "Reinforcements run out."}, "b": {"ru": "Бой — нет.", "uk": "Бій — ні.", "en": "The fight doesn’t."}, "s": {"ru": "Каждый раунд приближает решающую схватку.", "uk": "Кожен раунд наближає вирішальну сутичку.", "en": "Every round brings the decisive battle closer."}}, {"a": {"ru": "Вызови эвакуацию.", "uk": "Виклич евакуацію.", "en": "Call extraction."}, "b": {"ru": "Удержи зону.", "uk": "Утримай зону.", "en": "Hold the zone."}, "s": {"ru": "Сигнальная ракета сообщит всем, где начался финал.", "uk": "Сигнальна ракета покаже всім, де почався фінал.", "en": "A signal flare tells everyone where the final has begun."}}, {"a": {"ru": "Это твой", "uk": "Це твій", "en": "This is your"}, "b": {"ru": "Last Call.", "uk": "Last Call.", "en": "Last Call."}, "s": {"ru": "Последний шанс вывезти кейс и победить.", "uk": "Останній шанс вивезти кейс і перемогти.", "en": "Your last chance to get the case out and win."}}];
 function tzHtml(){ var L = TZ[tzIdx]; return '<div class="tz-line"><span>'+esc(tr(L.a))+'</span><em>'+esc(tr(L.b))+'</em></div><div class="tz-sub">'+esc(tr(L.s))+'</div>'; }
+function trailerBtn(cls){
+  var v = videoInfo(S.config.teaserVideo); if (!v) return '';
+  var inner = PLAY+'<span>'+esc(t('watch_trailer'))+'</span>';
+  if (v.kind === 'file' || (v.kind === 'yt' && window.LC_EMBED_YT)) return '<button type="button" class="'+cls+'" data-trailer>'+inner+'</button>';
+  return '<a class="'+cls+'" href="'+esc(v.href)+'" target="_blank" rel="noopener">'+inner+' ↗</a>';
+}
 function teaser(){
-  var c = S.config, v = videoInfo(c.teaserVideo), inner;
-  if (v) inner = mediaFrame({img:c.teaserPoster, video:c.teaserVideo, interactive:true, label:'LAST CALL', sub:'TEASER'});
-  else inner = '<div class="frame"><div class="ph-media"></div><div class="hud"><span class="rec"><i></i>REC</span><span class="cnt" id="tz-n">01 / 06</span><span class="tc" id="tz-tc">00:00:00</span></div><div class="tz-lines"><div class="tz-in" id="tz-text">'+tzHtml()+'</div></div><div class="tz-bar" id="tz-bar"></div></div>';
+  var v = videoInfo(S.config.teaserVideo);
+  var inner = '<div class="frame"><div class="ph-media"></div><div class="hud"><span class="rec"><i></i>REC</span><span class="cnt" id="tz-n">01 / 06</span><span class="tc" id="tz-tc">00:00:00</span></div><div class="tz-lines"><div class="tz-in" id="tz-text">'+tzHtml()+'</div></div>'+trailerBtn('tz-play')+'<div class="tz-bar" id="tz-bar"></div></div>';
   return '<section class="teaser" aria-label="'+esc(t('teaser'))+'">'+inner+'<div class="teaser-cap"><span>'+esc(t('teaser'))+'</span>'+(ed.on && !v ? '<span>'+esc(t('teaser_hint'))+'</span>' : '')+'</div></section>';
 }
+function openTrailer(){
+  var v = videoInfo(S.config.teaserVideo); if (!v) return;
+  var media;
+  if (v.kind === 'file') media = '<video src="'+esc(v.src)+'" controls autoplay playsinline'+(S.config.teaserPoster?' poster="'+esc(S.config.teaserPoster)+'"':'')+'></video>';
+  else if (v.kind === 'yt') media = '<iframe src="https://www.youtube-nocookie.com/embed/'+esc(v.id)+'?autoplay=1&rel=0" title="'+esc(t('watch_trailer'))+'" allow="autoplay; encrypted-media; fullscreen; picture-in-picture" allowfullscreen></iframe>';
+  else return;
+  var sc = document.createElement('div'); sc.className = 'scrim tscrim'; sc.id = 'trailer';
+  sc.innerHTML = '<div class="tmodal" role="dialog" aria-modal="true" aria-label="'+esc(t('watch_trailer'))+'"><button type="button" class="tclose" data-act="close-trailer" aria-label="'+esc(t('close'))+'">✕</button><div class="tbox">'+media+'</div></div>';
+  document.body.appendChild(sc);
+  sc.querySelector('.tclose').focus();
+}
+function closeTrailer(){ var sc = document.getElementById('trailer'); if (sc) sc.remove(); }
 var TZ_STEP = 4200;
 setInterval(function(){
   var txt = document.getElementById('tz-text'); if (!txt) return;
@@ -1691,8 +1719,8 @@ var SCHEMA = {
     {k:'winner',type:'text',l:{ru:'Победитель (для сыгранных)',uk:'Переможець (для зіграних)',en:'Winner (for played matches)'}}, {k:'example',type:'check',l:{ru:'Пометить как пример',uk:'Позначити як приклад',en:'Mark as example'}} ],
   config:[ {k:'registerUrl',type:'text',l:{ru:'Ссылка на регистрацию',uk:'Посилання на реєстрацію',en:'Registration link'}}, {k:'discordUrl',type:'text',l:{ru:'Приглашение в Discord',uk:'Запрошення в Discord',en:'Discord invite'}},
     {k:'bugChannelUrl',type:'text',l:{ru:'Ссылка на канал баг-репортов',uk:'Посилання на канал баг-репортів',en:'Bug-report channel link'}}, {k:'tz',type:'text',l:{ru:'Часовой пояс для расписания',uk:'Часовий пояс для розкладу',en:'Schedule time zone'}},
-    {k:'teaserVideo',type:'video',l:{ru:'Тизер на главной: ссылка на YouTube или загрузите mp4 до 50 МБ',uk:'Тизер на головній: посилання на YouTube або завантажте mp4 до 50 МБ',en:'Home teaser: a YouTube link, or upload an mp4 up to 50 MB'}},
-    {k:'teaserPoster',type:'image1',l:{ru:'Обложка тизера',uk:'Обкладинка тизера',en:'Teaser poster'}} ]
+    {k:'teaserVideo',type:'video',l:{ru:'Трейлер: ссылка на YouTube или загрузите mp4 до 50 МБ',uk:'Трейлер: посилання на YouTube або завантажте mp4 до 50 МБ',en:'Trailer: a YouTube link, or upload an mp4 up to 50 MB'}},
+    {k:'teaserPoster',type:'image1',l:{ru:'Обложка трейлера',uk:'Обкладинка трейлера',en:'Trailer poster'}} ]
 };
 var editing = null;
 function findItem(kind,id){ if (kind==='config') return S.config; return (S[kind]||[]).filter(function(x){ return x.id===id; })[0]; }
@@ -1816,12 +1844,14 @@ function publish(){
 
 /* ---------- events ---------- */
 document.addEventListener('click', function(ev){
-  var el = ev.target.closest('[data-rjump],[data-lang],[data-jump],[data-season],[data-act],[data-ed],[data-del],[data-thumb],[data-playvid],[data-rmimg]');
+  if (ev.target.classList && ev.target.classList.contains('tscrim')) { closeTrailer(); return; }
+  var el = ev.target.closest('[data-trailer],[data-rjump],[data-lang],[data-jump],[data-season],[data-act],[data-ed],[data-del],[data-thumb],[data-playvid],[data-rmimg]');
   if (!el) { pendingDel = null; return; }
   if (el.hasAttribute('data-lang')) { lang = el.getAttribute('data-lang'); lsSet('lc-lang', lang); render(); return; }
   if (el.hasAttribute('data-jump')) { ev.preventDefault(); if (view!=='mode'){ view='mode'; history.replaceState(null,'','#mode'); render(); } var tg = document.getElementById('g-'+el.getAttribute('data-jump')); if (tg) tg.scrollIntoView({behavior: matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'}); return; }
   if (el.hasAttribute('data-rjump')) { ev.preventDefault(); var rg = document.getElementById('rg-'+el.getAttribute('data-rjump')); if (rg) rg.scrollIntoView({behavior: matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'}); return; }
   if (el.hasAttribute('data-thumb')) { galleryIdx = Number(el.getAttribute('data-thumb')); render(); return; }
+  if (el.hasAttribute('data-trailer')) { openTrailer(); return; }
   if (el.hasAttribute('data-playvid')) { var fr = el.closest('.frame'), vid = document.createElement('video'); vid.src = el.getAttribute('data-playvid'); vid.controls = true; vid.autoplay = true; vid.playsInline = true; var pimg = fr.querySelector('img'); if (pimg) vid.poster = pimg.src; fr.innerHTML = ''; fr.appendChild(vid); return; }
   if (el.hasAttribute('data-rmimg')) { var k = el.getAttribute('data-rmimg'), arr = getImgs(k).slice(); arr.splice(Number(el.getAttribute('data-i')), 1); editing.item[k] = Array.isArray(editing.item[k]) ? arr : (arr[0] || ''); refreshImgs(k); return; }
   if (el.hasAttribute('data-season')) { selSeason = el.getAttribute('data-season'); render(); return; }
@@ -1829,6 +1859,7 @@ document.addEventListener('click', function(ev){
   if (el.hasAttribute('data-del')) { delItem(el); return; }
   var a = el.getAttribute('data-act');
   if (a==='theme') { theme = theme==='dark' ? 'light' : 'dark'; lsSet('lc-theme', theme); applyTheme(); render(); }
+  else if (a==='close-trailer') closeTrailer();
   else if (a==='login') login();
   else if (a==='logout') logout();
   else if (a==='ed-on') { ed.on = true; render(); }
@@ -1874,7 +1905,7 @@ document.addEventListener('change', function(ev){ var el=ev.target;
     el.value = '';
     return;
   } if (el.getAttribute && el.getAttribute('data-bug')==='sev') { bug.sev = el.value; updateBugPreview(); } });
-document.addEventListener('keydown', function(ev){ if (ev.key==='Escape' && editing) closeEditor(); });
+document.addEventListener('keydown', function(ev){ if (ev.key==='Escape') { if (document.getElementById('trailer')) closeTrailer(); else if (editing) closeEditor(); } });
 window.addEventListener('hashchange', function(){ var pv = view, pp = postId; parseHash(); if (view !== pv || postId !== pp) { galleryIdx = 0; render(); window.scrollTo(0,0); } });
 
 render();
